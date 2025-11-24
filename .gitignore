@@ -13,8 +13,7 @@ backend/*.log
 *.env
 backend/.env
 
-# ---- Vector store & generated data ----
-backend/vectorstore/
+# ---- Generated data ----
 backend/data/processed/
 backend/data/**/*.jsonl
 

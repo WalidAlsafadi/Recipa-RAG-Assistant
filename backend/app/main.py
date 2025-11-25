@@ -48,7 +48,11 @@ def ask(req: AskRequest):
         raise HTTPException(
             status_code=500,
             detail="Server misconfigured: OPENAI_API_KEY is not set. "
+<<<<<<< Updated upstream
                     "Add it to backend/.env and restart the server.",
+=======
+                "Add it to backend/.env and restart the server.",
+>>>>>>> Stashed changes
         )
 
     try:

@@ -9,6 +9,7 @@ from app.rag.llm import generate_answer
 
 app = FastAPI(title="Cookbook RAG API (LangChain)")
 
+
 # CORS (for when you add a frontend)
 origins = [
     "http://localhost:3000",

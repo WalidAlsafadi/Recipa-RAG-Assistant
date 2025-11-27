@@ -1,133 +1,185 @@
-# Cookbook RAG Assistant
+# Recipa AI
 
-**Ask questions about _The Low-Cost Cookbook_ using a LangChain + Chroma RAG backend.**
+A Retrieval-Augmented Generation (RAG) cooking assistant built with **LangChain**, **ChromaDB**, **FastAPI**, and **Next.js**.  
+Ask grounded questions about recipes using a real cookbook PDF — with short-term chat memory for more natural interactions.
 
-This project provides a simple, clean, production-friendly backend demonstrating Retrieval-Augmented Generation (RAG) using:
+## 📌 Overview
 
-- **FastAPI** — API layer
-- **LangChain** — document loading, chunking, embeddings, retriever, and LLM chain
-- **ChromaDB** — persistent local vector store
-- **OpenAI models** — embedding + answer generation
-- **Python 3.10+**
+**Recipa AI** is a full-stack RAG project that answers cooking questions strictly using content from a cookbook PDF.  
+It is built as a **portfolio-quality**, clean, modern example of:
 
-It is designed as a **portfolio-quality backend engineering example** that shows how to build, run, and query a real RAG pipeline end‑to‑end.
+- Retrieval-Augmented Generation (LangChain + Chroma)
+- FastAPI backend with a `/ask` endpoint
+- Next.js 14 frontend with Tailwind CSS
+- Markdown-formatted AI responses
+- Short-term chat memory (last 3 Q&A pairs)
+- PDF ingestion → vectorstore → retrieval → LLM answer
 
-## 🚀 Features
-
-- Ingests cookbook PDF → chunks → embeds → stores into Chroma
-- Answers questions strictly from the book
-- Markdown‑formatted responses
-- Clear error handling (missing API key, missing vectorstore)
-- CORS enabled for frontend integration
-- Clean file structure for learning and reuse
-
-## 📁 Project Structure
+## 🧠 Architecture
 
 ```
-cookbook-rag/
+PDF → Text Splitter → Embeddings → ChromaDB (persisted)
+                           ↓
+                FastAPI `/ask` endpoint
+                           ↓
+       LangChain Prompt (with last 3 history items)
+                           ↓
+                     ChatOpenAI
+                           ↓
+                Markdown Answer → Frontend UI
+```
+
+## ✨ Features
+
+### 🔎 Retrieval-Augmented Generation
+
+- Uses **LangChain** and **ChromaDB** to return grounded answers
+- Never hallucinates beyond the cookbook context
+
+### ⚡ FastAPI Backend
+
+- `/ask` endpoint with:
+  - question
+  - k (retrieval count)
+  - history (last 3 Q&A pairs)
+
+### 💬 Short-Term Memory
+
+The AI can resolve references like _“the first one”_ using the last **3** conversation turns.  
+(Frontend memory = last 5, backend memory = last 3.)
+
+### 🖥️ Modern Next.js Frontend
+
+- One-page UI (hero → how-it-works → chat → team)
+- Tailwind CSS
+- Markdown rendering
+- Clean and minimal cooking-themed styling
+
+### 🧩 Deployment
+
+- Frontend: **Vercel**
+- Backend: **Render**
+
+## 📥 Project Structure
+
+```
+recipa-rag-assistant/
+│
 ├── backend/
 │   ├── app/
-│   │   ├── main.py                # FastAPI API (health + /ask)
-│   │   ├── config.py              # Models, paths, env loader
+│   │   ├── main.py
+│   │   ├── config.py
 │   │   └── rag/
-│   │       ├── ingest.py          # Load → chunk → embed → save vectorstore
-│       ├── retrieval.py       # Retrieve relevant chunks using LangChain
-│       └── llm.py               # Markdown LLM answer generator
-│
+│   │       ├── ingest.py
+│   │       ├── retrieval.py
+│   │       └── llm.py
 │   ├── data/
-│   │   └── source/
-│   │       └── COOKBOOK.pdf       # Original cookbook file
-│   ├── vectorstore/               # Auto-created Chroma directory
-│   ├── scripts/
-│   │   └── run_ingest.py          # CLI: python -m scripts.run_ingest
-│   ├── requirements.txt
-│   └── .env.example               # Template env file
+│   │   ├── source/
+│   │   └── processed/
+│   ├── vectorstore/
+│   ├── scripts/run_ingest.py
+│   └── requirements.txt
 │
-└── frontend/                      # (optional) UI can be added later
+└── frontend/
+    ├── app/page.tsx
+    ├── public/
+    ├── components/
+    └── package.json
 ```
 
-## 🔧 Installation & Setup
+## 🚀 Getting Started
 
-### 1. Clone the repo
+### 1️⃣ Clone the Project
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/cookbook-rag.git
-cd cookbook-rag/backend
+git clone https://github.com/WalidAlsafadi/recipa-rag-assistant
+cd recipa-rag-assistant
 ```
 
-### 2. Create virtual environment
+## 🐍 Backend Setup (FastAPI)
+
+### 2️⃣ Create virtual environment
 
 ```bash
+cd backend
 python -m venv .venv
-# Windows
-.venv\Scripts\activate
-# macOS/Linux
-source .venv/bin/activate
+. .venv/bin/activate   # Windows: .venv\Scripts\activate
 ```
 
-### 3. Install dependencies
+### 3️⃣ Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Create `.env` file
+### 4️⃣ Add environment variables
 
 Create `backend/.env`:
 
 ```
-OPENAI_API_KEY=your_api_key_here
+OPENAI_API_KEY=your-key-here
 ```
 
-(See `.env.example` for variable names.)
-
-### 5. Run ingestion (build vectorstore)
+### 5️⃣ Ingest the cookbook PDF
 
 ```bash
 python -m scripts.run_ingest
 ```
 
-If successful, it will print:
+This creates `vectorstore/` with persisted embeddings.
 
-```
-Loaded N pages as documents.
-Split into M chunks.
-Ingestion done. Vectorstore persisted.
-```
-
-### 6. Start the server
+### 6️⃣ Start backend
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-## 📡 API Usage
+Backend runs at:  
+**http://localhost:8000**
 
-### Health-check
+## 🌐 Frontend Setup (Next.js 14)
+
+### 1️⃣ Install Node dependencies
 
 ```bash
-GET http://127.0.0.1:8000/health
+cd frontend
+npm install
 ```
 
-Response:
+### 2️⃣ Add frontend environment variable
+
+Create `frontend/.env`:
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:8000
+```
+
+### 3️⃣ Run frontend
+
+```bash
+npm run dev
+```
+
+Frontend runs at:  
+**http://localhost:3000**
+
+## 🧑‍💻 API (Minimal)
+
+### **POST /ask**
+
+Request:
 
 ```json
-{ "status": "ok" }
-```
-
-### Ask a question
-
-```bash
-POST http://127.0.0.1:8000/ask
-Content-Type: application/json
-
 {
   "question": "How do I make the chocolate mug cake?",
-  "k": 5
+  "k": 5,
+  "history": [
+    { "question": "Give me two dessert options", "answer": "1) ... 2) ..." }
+  ]
 }
 ```
 
-Response (Markdown inside JSON):
+Response:
 
 ```json
 {
@@ -135,17 +187,23 @@ Response (Markdown inside JSON):
 }
 ```
 
-You can render Markdown on your frontend.
-
-## 👥 Members
+## 👥 Team
 
 - **Walid Alsafadi**
 - **Fares Alnamla**
 - **Ahmed Alyazuri**
 
-## ✅ Status
+## 📄 License
 
-Backend MVP: **Complete and functional.**  
-Ready for frontend integration or deployment.
+This project is licensed under the **Apache License 2.0**, which requires attribution when used or modified.
 
-Trigger CI test
+See the full license below.
+
+## 📦 Future Improvements
+
+- Add full chat memory
+- Support multiple PDFs
+- Add user authentication
+- Add caching for repeated queries
+
+Give us a ⭐ on GitHub if you like this project!

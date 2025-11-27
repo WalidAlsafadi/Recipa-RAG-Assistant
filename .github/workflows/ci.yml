@@ -1,4 +1,4 @@
-name: CI - Cookbook RAG
+name: CI - Recipa AI
 
 on:
   push:
@@ -10,6 +10,10 @@ jobs:
   backend:
     name: Backend (FastAPI) CI
     runs-on: ubuntu-latest
+
+
+    env:
+      OPENAI_API_KEY: "test" 
 
     defaults:
       run:

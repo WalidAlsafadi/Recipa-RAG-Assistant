@@ -1,4 +1,3 @@
-from typing import List
 from pathlib import Path
 
 from langchain_openai import OpenAIEmbeddings
@@ -14,6 +13,7 @@ class VectorStoreNotReadyError(RuntimeError):
     """Raised when the Chroma vector store has not been built yet."""
     pass
 
+
 def _ensure_vectorstore_ready() -> None:
     """
     Check if the vectorstore directory exists and is non-empty.
@@ -25,6 +25,7 @@ def _ensure_vectorstore_ready() -> None:
             "Vector store is empty or missing. "
             "Run `python -m scripts.run_ingest` from the backend/ folder first."
         )
+
 
 def _get_vectorstore() -> Chroma:
     _ensure_vectorstore_ready()
@@ -42,9 +43,8 @@ def _get_vectorstore() -> Chroma:
     return vectorstore
 
 
-def retrieve_docs(question: str, k: int = 5) -> List[Document]:
+def retrieve_docs(question: str, k: int = 5) -> list[Document]:
     vectorstore = _get_vectorstore()
     retriever = vectorstore.as_retriever(search_kwargs={"k": k})
-    docs: List[Document] = retriever.invoke(question)
+    docs: list[Document] = retriever.invoke(question)
     return docs
-

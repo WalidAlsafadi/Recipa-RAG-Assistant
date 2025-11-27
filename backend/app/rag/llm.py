@@ -29,8 +29,7 @@ _prompt = ChatPromptTemplate.from_messages(
         ),
         (
             "user",
-            "Question: {question}\n\n"
-            "Context:\n{context}",
+            "Question: {question}\n\nContext:\n{context}",
         ),
     ]
 )

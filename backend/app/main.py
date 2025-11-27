@@ -15,16 +15,17 @@ origins = [
     "http://127.0.0.1:3000",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://cookbook-rag.vercel.app"
+    "https://cookbook-rag.vercel.app",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,       # for dev; later you can tighten this
+    allow_origins=origins,  # for dev; later you can tighten this
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 class AskRequest(BaseModel):
     question: str
@@ -48,7 +49,7 @@ def ask(req: AskRequest):
         raise HTTPException(
             status_code=500,
             detail="Server misconfigured: OPENAI_API_KEY is not set. "
-                "Add it to backend/.env and restart the server.",
+            "Add it to backend/.env and restart the server.",
         )
 
     try:

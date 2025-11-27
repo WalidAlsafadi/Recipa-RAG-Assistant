@@ -12,6 +12,7 @@ _settings = get_settings()
 
 class VectorStoreNotReadyError(RuntimeError):
     """Raised when the Chroma vector store has not been built yet."""
+
     pass
 
 

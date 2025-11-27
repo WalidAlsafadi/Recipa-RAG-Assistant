@@ -23,7 +23,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,       
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -69,8 +69,7 @@ def ask(req: AskRequest):
 
         # Prepare history payload (plain dicts) for the LLM
         history_payload = [
-            {"question": h.question, "answer": h.answer}
-            for h in req.history
+            {"question": h.question, "answer": h.answer} for h in req.history
         ]
 
         # 3) generate answer with LangChain ChatOpenAI, using short history

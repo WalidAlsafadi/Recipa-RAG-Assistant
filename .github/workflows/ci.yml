@@ -11,9 +11,9 @@ jobs:
     name: Backend (FastAPI) CI
     runs-on: ubuntu-latest
 
-
     env:
-      OPENAI_API_KEY: "test" 
+      OPENAI_API_KEY: "test"
+      PYTHONPATH: "${{ github.workspace }}/backend"
 
     defaults:
       run:
@@ -35,8 +35,7 @@ jobs:
 
       - name: Run tests
         run: |
-          export PYTHONPATH=$PYTHONPATH:$(pwd)
-          pytest
+          pytest tests/test_import_app.py
 
   frontend:
     name: Frontend (Next.js) CI

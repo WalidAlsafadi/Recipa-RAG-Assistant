@@ -17,10 +17,6 @@ import {
   ArrowUp,
   Linkedin,
   Mail,
-<<<<<<< Updated upstream
-  FlaskConical, // Added for the Demo Badge
-=======
->>>>>>> Stashed changes
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -52,7 +48,7 @@ const TEAM_MEMBERS = [
   },
   {
     name: "Fares Alnamla",
-    role: "QA & DevOps Engineer",
+    role: "Web Deployment",
     image: "/fares.jpg",
     linkedin: "https://www.linkedin.com/in/faresalnamla",
     github: "https://github.com/FaresAlnamla",
@@ -60,7 +56,7 @@ const TEAM_MEMBERS = [
   },
   {
     name: "Ahmed Alyazuri",
-    role: "Frontend Engineer",
+    role: "Frontend Developer",
     image: "/ahmed.jpg",
     linkedin: "https://www.linkedin.com/in/ahmed-alyazuri",
     github: "https://github.com/AhmedAl-Yazuri",
@@ -71,7 +67,7 @@ const TEAM_MEMBERS = [
 const SECTIONS = [
   { name: "Home", id: "hero" },
   { name: "Architecture", id: "how-it-works" },
-  { name: "AI Assistant", id: "qa-section" },
+  { name: "Ask RecipaAI", id: "qa-section" },
   { name: "Team", id: "team" },
 ];
 
@@ -105,33 +101,6 @@ export default function Home() {
     };
     window.addEventListener("scroll", handleScroll);
 
-<<<<<<< Updated upstream
-    // 2. IntersectionObserver for Active Section (Performance optimized)
-    const observerOptions = {
-      root: null,
-      rootMargin: "-20% 0px -60% 0px", // Triggers when section is near the top
-      threshold: 0,
-    };
-
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-    SECTIONS.forEach((section) => {
-      const element = document.getElementById(section.id);
-      if (element) observer.observe(element);
-    });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      observer.disconnect();
-    };
-=======
           // Update active section spy
           const sectionIds = ["hero", "how-it-works", "qa-section", "team"];
           for (const id of sectionIds) {
@@ -154,23 +123,24 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll);
     handleScroll(); // Initial check
     return () => window.removeEventListener("scroll", handleScroll);
->>>>>>> Stashed changes
   }, []);
 
   const scrollToSection = useCallback((id: string) => {
     setMobileMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
+      // Offset calculation to align top of section under the navbar
       const headerOffset = 80;
       const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerOffset;
 
       window.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
       });
-      
-      // Manually set active section to avoid observer lag
+
+      // Update active section immediately
       setActiveSection(id);
     }
   }, []);
@@ -219,10 +189,7 @@ export default function Home() {
         body: JSON.stringify({
           question: queryText.trim(),
           k: 5,
-<<<<<<< Updated upstream
-=======
           // Send at most the last 3 Q&A pairs
->>>>>>> Stashed changes
           history: history.slice(-3),
         }),
       });
@@ -246,28 +213,22 @@ export default function Home() {
             answer: data.answer,
           },
         ];
-<<<<<<< Updated upstream
-        return updated.slice(-5);
-      });
-
-      // Scroll to answer
-=======
         // Keep only last 5 in the UI history
         return updated.slice(-5);
       });
 
       // Allow DOM to update before scrolling
->>>>>>> Stashed changes
       setTimeout(() => {
-        const answerPanel = document.getElementById('answer-panel');
+        const answerPanel = document.getElementById("answer-panel");
         if (answerPanel) {
-            const headerOffset = 100;
-            const elementPosition = answerPanel.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth"
-            });
+          const headerOffset = 100;
+          const elementPosition = answerPanel.getBoundingClientRect().top;
+          const offsetPosition =
+            elementPosition + window.pageYOffset - headerOffset;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
         }
       }, 100);
     } catch (err) {
@@ -281,10 +242,7 @@ export default function Home() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-<<<<<<< Updated upstream
-=======
     // Submit on Enter (without Shift)
->>>>>>> Stashed changes
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
@@ -298,9 +256,9 @@ export default function Home() {
         <div className="fixed inset-0 z-[60] bg-white/95 backdrop-blur-xl animate-in slide-in-from-right-full duration-300 md:hidden flex flex-col">
           <div className="flex justify-between items-center p-6 border-b border-gray-100">
             <div className="flex items-center gap-3">
-                <span className="font-bold text-xl text-gray-900">
-                  Recipa<span className="text-orange-600">AI</span>
-                </span>
+              <span className="font-bold text-xl text-gray-900">
+                Recipa<span className="text-orange-600">AI</span>
+              </span>
             </div>
             <button
               onClick={() => setMobileMenuOpen(false)}
@@ -312,23 +270,25 @@ export default function Home() {
           </div>
           <div className="flex flex-col p-6 gap-4 overflow-y-auto">
             {SECTIONS.map((item) => (
-                <button
-                    key={item.name}
-                    onClick={() => scrollToSection(item.id)}
-                    className={`w-full flex items-center text-left text-2xl font-bold py-4 border-b border-gray-50 transition-colors ${
-                      activeSection === item.id ? 'text-orange-600' : 'text-gray-800 hover:text-orange-600'
-                    }`}
-                >
-                    {item.name}
-                </button>
+              <button
+                key={item.name}
+                onClick={() => scrollToSection(item.id)}
+                className={`w-full flex items-center text-left text-2xl font-bold py-4 border-b border-gray-50 transition-colors ${
+                  activeSection === item.id
+                    ? "text-orange-600"
+                    : "text-gray-800 hover:text-orange-600"
+                }`}
+              >
+                {item.name}
+              </button>
             ))}
-            
-            <a 
-                href={GITHUB_URL} 
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 text-left text-2xl font-bold text-gray-800 py-4 border-b border-gray-50 hover:text-orange-600 transition-colors"
+
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 text-left text-2xl font-bold text-gray-800 py-4 border-b border-gray-50 hover:text-orange-600 transition-colors"
             >
               <Github className="h-6 w-6" />
               <span>GitHub Repo</span>
@@ -340,9 +300,9 @@ export default function Home() {
       {/* --- NAVIGATION BAR --- */}
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out border-b ${
-          scrolled 
-            ? 'bg-white/90 backdrop-blur-xl border-gray-200 shadow-sm py-3' 
-            : 'bg-transparent border-transparent py-4 md:py-8'
+          scrolled
+            ? "bg-white/90 backdrop-blur-xl border-gray-200 shadow-sm py-3"
+            : "bg-transparent border-transparent py-4 md:py-8"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -353,9 +313,11 @@ export default function Home() {
               onClick={() => scrollToSection("hero")}
             >
               <div className="flex flex-col">
-                <span className={`font-extrabold text-lg md:text-2xl tracking-tight leading-none drop-shadow-sm transition-colors duration-300 ${
-                  scrolled ? 'text-slate-900' : 'text-white'
-                }`}>
+                <span
+                  className={`font-extrabold text-lg md:text-2xl tracking-tight leading-none drop-shadow-sm transition-colors duration-300 ${
+                    scrolled ? "text-slate-900" : "text-white"
+                  }`}
+                >
                   Recipa<span className="text-orange-500">AI</span>
                 </span>
               </div>
@@ -363,21 +325,23 @@ export default function Home() {
 
             {/* CENTER: Navigation Links (Desktop) */}
             <div className="hidden md:flex items-center justify-center">
-              <div className={`flex items-center gap-2 p-2 rounded-full border transition-all duration-300 ${
-                scrolled 
-                  ? 'bg-gray-100/80 border-gray-200' 
-                  : 'bg-black/20 border-white/10 backdrop-blur-md'
-              }`}>
+              <div
+                className={`flex items-center gap-2 p-2 rounded-full border transition-all duration-300 ${
+                  scrolled
+                    ? "bg-gray-100/80 border-gray-200"
+                    : "bg-black/20 border-white/10 backdrop-blur-md"
+                }`}
+              >
                 {SECTIONS.map((item) => (
                   <button
                     key={item.name}
                     onClick={() => scrollToSection(item.id)}
                     className={`px-5 py-2 rounded-full text-base font-bold transition-all duration-300 ${
-                      activeSection === item.id 
-                        ? 'bg-orange-600 text-white shadow-md' 
-                        : scrolled 
-                            ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50' 
-                            : 'text-white/90 hover:text-white hover:bg-white/10'
+                      activeSection === item.id
+                        ? "bg-orange-600 text-white shadow-md"
+                        : scrolled
+                        ? "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50"
+                        : "text-white/90 hover:text-white hover:bg-white/10"
                     }`}
                   >
                     {item.name}
@@ -393,9 +357,9 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-full border transition-all ${
-                    scrolled 
-                    ? 'text-slate-900 border-slate-200 hover:bg-slate-50' 
-                    : 'text-white border-white/30 hover:bg-white/10 hover:text-white'
+                  scrolled
+                    ? "text-slate-900 border-slate-200 hover:bg-slate-50"
+                    : "text-white border-white/30 hover:bg-white/10 hover:text-white"
                 }`}
               >
                 <Github className="h-5 w-5" />
@@ -422,12 +386,12 @@ export default function Home() {
       </nav>
 
       {/* --- HERO SECTION --- */}
-      <section 
-        id="hero" 
+      <section
+        id="hero"
         className="relative w-full h-screen min-h-screen flex items-center justify-center bg-cover bg-center px-4"
-        style={{ 
+        style={{
           // Ensure you have 'hero-bg.jpg' in your public folder
-          backgroundImage: "url('/hero-bg.jpg')" 
+          backgroundImage: "url('/hero-bg.jpg')",
         }}
       >
         <div className="absolute inset-0 bg-black/50 backdrop-blur-[1px]"></div>
@@ -471,9 +435,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* --- HOW IT WORKS --- */}
-      <section id="how-it-works" className="min-h-screen flex flex-col justify-center py-16 md:py-32 bg-white border-b border-gray-200 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
+      {/* --- HOW IT WORKS (Full Page) --- */}
+      {/* ADDED: min-h-screen and flex-col to make it take full view */}
+      <section
+        id="how-it-works"
+        className="min-h-screen flex flex-col justify-center py-16 md:py-32 bg-white border-b border-gray-200 relative overflow-hidden"
+      >
+        <div
+          className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          style={{
+            backgroundImage: "radial-gradient(#000 1px, transparent 1px)",
+            backgroundSize: "32px 32px",
+          }}
+        ></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
           <div className="text-center mb-16 md:mb-24">
@@ -485,7 +459,6 @@ export default function Home() {
               Leveraging vector embeddings and Large Language Models for precise
               information retrieval.
             </p>
-            
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
@@ -525,19 +498,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* --- Q&A SECTION --- */}
-      <section id="qa-section" className="min-h-screen flex flex-col justify-center py-16 md:py-32 bg-gray-50 border-b border-gray-200">
+      {/* --- Q&A SECTION (Full Page) --- */}
+      {/* ADDED: min-h-screen and flex-col to make it take full view */}
+      <section
+        id="qa-section"
+        className="min-h-screen flex flex-col justify-center py-16 md:py-32 bg-gray-50 border-b border-gray-200"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="text-center mb-16 md:mb-20">
-            
-            {/* DEMO BADGE */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-xs md:text-sm font-bold uppercase tracking-widest mb-6 shadow-sm">
-              <FlaskConical className="h-4 w-4" />
-              <span>Research Preview</span>
-            </div>
-
+            <span className="text-orange-600 font-bold tracking-widest uppercase text-xs md:text-sm mb-4 block">
+              Query Engine
+            </span>
             <h2 className="text-4xl md:text-6xl font-extrabold text-gray-900 tracking-tight">
-                Ask Recipa<span className="text-orange-600">AI</span>
+              Ask Recipa<span className="text-orange-600">AI</span>
             </h2>
 
             {/* DEMO SUBTITLE */}
@@ -632,7 +605,9 @@ export default function Home() {
               >
                 <CardHeader className="bg-gray-50 border-b border-gray-200 py-4 md:py-6 px-6 md:px-10 flex flex-row justify-between items-center">
                   <div className="flex items-center gap-3 md:gap-4">
-                      <CardTitle className="text-lg md:text-2xl text-gray-900 font-bold">Generated Result</CardTitle>
+                    <CardTitle className="text-lg md:text-2xl text-gray-900 font-bold">
+                      Generated Result
+                    </CardTitle>
                   </div>
                   <Button
                     variant="outline"
@@ -666,9 +641,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* --- TEAM SECTION --- */}
-      <section id="team" className="min-h-screen flex flex-col justify-center py-16 md:py-32 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
+      {/* --- TEAM SECTION (Full Page) --- */}
+      {/* ADDED: min-h-screen and flex-col to make it take full view */}
+      <section
+        id="team"
+        className="min-h-screen flex flex-col justify-center py-16 md:py-32 bg-white relative overflow-hidden"
+      >
+        <div
+          className="absolute inset-0 opacity-[0.02] pointer-events-none"
+          style={{
+            backgroundImage: "radial-gradient(#000 1px, transparent 1px)",
+            backgroundSize: "32px 32px",
+          }}
+        ></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
           <div className="text-center mb-16 md:mb-24">
@@ -751,9 +736,9 @@ export default function Home() {
             A professional RAG demonstration built with precision engineering
             and culinary passion.
           </p>
-          
-          <button 
-            onClick={() => scrollToSection('hero')}
+
+          <button
+            onClick={() => scrollToSection("hero")}
             className="mb-8 p-3 bg-gray-100 rounded-full text-slate-500 hover:bg-orange-600 hover:text-white transition-colors inline-block shadow-sm"
             aria-label="Scroll to top"
           >

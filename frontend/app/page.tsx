@@ -92,18 +92,16 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Memoize markdown plugins to prevent re-renders during typing
+  // Memoize markdown plugins
   const markdownPlugins = useMemo(() => [remarkGfm], []);
 
-  // --- Scroll Logic (Throttled) ---
+  // --- Scroll Logic (Optimized) ---
   useEffect(() => {
-    let ticking = false;
-
+    // 1. Simple listener for Navbar background (lightweight)
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          // Update navbar background
-          setScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
 
           // Update active section spy
           const sectionIds = ["hero", "how-it-works", "qa-section", "team"];
@@ -130,7 +128,6 @@ export default function Home() {
   }, []);
 
   const scrollToSection = useCallback((id: string) => {
-    // This handles closing the menu for internal links
     setMobileMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
@@ -151,6 +148,15 @@ export default function Home() {
   }, []);
 
   // --- Core Logic ---
+  // Fix: UseEffect to handle the copy timeout cleanup safely
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (isCopied) {
+      timeout = setTimeout(() => setIsCopied(false), 2000);
+    }
+    return () => clearTimeout(timeout);
+  }, [isCopied]);
+
   const handleCopy = async () => {
     if (!currentAnswer) return;
     try {
@@ -161,20 +167,8 @@ export default function Home() {
         description: "Recipe saved to clipboard.",
         className: "bg-white border-orange-200 text-orange-900",
       });
-      setTimeout(() => setIsCopied(false), 2000);
-    } catch {
-      toast({
-        title: "Failed to copy",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    // Submit on Enter (without Shift)
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit(e);
+    } catch (err) {
+      toast({ title: "Failed to copy", variant: "destructive" });
     }
   };
 
@@ -548,6 +542,11 @@ export default function Home() {
               Ask Recipa
               <span className="text-orange-600">AI</span>
             </h2>
+
+            {/* DEMO SUBTITLE */}
+            <p className="mt-6 text-slate-500 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+              This is a live demonstration. Occasional inaccuracies or latency may occur as we fine-tune the model.
+            </p>
           </div>
 
           <div className="max-w-5xl mx-auto space-y-10">
@@ -617,6 +616,14 @@ export default function Home() {
                       </>
                     )}
                   </Button>
+
+                  {/* DISCLAIMER FOOTNOTE */}
+                  <p className="text-xs text-center text-slate-400 font-medium pt-2">
+                    RecipaAI may display inaccurate info, including about ingredients or safety. 
+                    <br className="hidden sm:block" />
+                    Please verify recipes before cooking.
+                  </p>
+
                 </form>
               </CardContent>
             </Card>

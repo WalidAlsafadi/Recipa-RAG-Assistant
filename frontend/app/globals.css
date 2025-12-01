@@ -25,6 +25,14 @@
     --ring: 20 14.3% 4.1%;
     --radius: 0.75rem;
   }
+
+  /* Mobile app safe area support for notches and safe zones */
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
 
 @layer base {
@@ -38,6 +46,16 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* 💡 FIX FOR NAVBAR JUMP: 
+     Apply scroll-margin-top to all target sections to prevent the fixed navbar 
+     from covering the heading when scrolling to an anchor link. */
+  #qa-section,
+  #how-it-works,
+  #architecture-section {
+      /* Adjust this value (e.g., 5rem) to be slightly larger than your fixed navbar height */
+      scroll-margin-top: 5rem; 
   }
 }
 
